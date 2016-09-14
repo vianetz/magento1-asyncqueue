@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Vianetz_AsyncQueue>
+            <codePool>community</codePool>
+            <active>true</active>
+            <depends>
+                <Mage_Core />
+                <Vianetz_Core />
+            </depends>
+        </Vianetz_AsyncQueue>
+    </modules>
+</config>

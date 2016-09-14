@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="vianetz_asyncqueue" default="build" description="Builds the Vianetz_AsyncQueue Magento module.">
+    <property file="build/build.properties"/>
+
+    <tstamp>
+        <format property="build.time" pattern="%Y%m%d_%H%M%S"/>
+    </tstamp>
+    <tstamp>
+        <format property="build.timestamp" pattern="%s"/>
+    </tstamp>
+
+    <fileset dir="${asyncqueue.build.dir}" id="allfiles">
+        <include name="**/**"/>
+
+        <!-- ignore Zend Studio/PHPStorm project cruft -->
+        <exclude name=".project"/>
+        <exclude name=".buildpath"/>
+        <exclude name=".settings"/>
+        <exclude name=".idea"/>
+
+        <exclude name=".git"/>
+
+        <!-- exclude phing build stuff -->
+        <exclude name="build/**"/>
+        <exclude name="build.xml"/>
+
+        <!-- exclude mac unwanted files (just for safety) -->
+        <exclude name=".DS_Store"/>
+    </fileset>
+
+    <property name="src.dir" value="${asyncqueue.build.dir}/src"/>
+
+    <target name="export">
+        <mkdir  dir="${asyncqueue.build.dir}" />
+        <gitclone repository="${asyncqueue.git.repo}" targetPath="${asyncqueue.build.dir}/." />
+        <gitcheckout repository="${asyncqueue.build.dir}" branchname="${asyncqueue.git.branch}" />
+    </target>
+
+    <target name="build" depends="export">
+        <copy todir="${asyncqueue.temp.dir}" includeemptydirs="false">
+            <fileset refid="allfiles"/>
+        </copy>
+    </target>
+
+    <target name="clean">
+        <delete dir="${asyncqueue.build.dir}"/>
+        <delete dir="${asyncqueue.temp.dir}"/>
+    </target>
+</project>
