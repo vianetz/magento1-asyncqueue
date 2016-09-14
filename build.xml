@@ -34,9 +34,24 @@
         <mkdir  dir="${asyncqueue.build.dir}" />
         <gitclone repository="${asyncqueue.git.repo}" targetPath="${asyncqueue.build.dir}/." />
         <gitcheckout repository="${asyncqueue.build.dir}" branchname="${asyncqueue.git.branch}" />
+
+        <!-- Get version from config.xml -->
+        <php expression="preg_match('#version.*([0-9]+\.[0-9]+\.[0-9]+).*version#', file_get_contents('${src.dir}/app/code/community/Vianetz/AsyncQueue/etc/config.xml') , $m); $retval = $m[1];"
+             returnProperty="build.version"/>
+        <echo msg="Building Module Version: ${build.version}"/>
     </target>
 
     <target name="build" depends="export">
+        <!-- Replace module version in all relevant files with that from config.xml -->
+        <reflexive>
+            <fileset refid="allfiles"/>
+            <filterchain>
+                <replacetokens begintoken="%%" endtoken="%%">
+                    <token key="MODULE_VERSION" value="${build.version}"/>
+                </replacetokens>
+            </filterchain>
+        </reflexive>
+
         <copy todir="${asyncqueue.temp.dir}" includeemptydirs="false">
             <fileset refid="allfiles"/>
         </copy>
