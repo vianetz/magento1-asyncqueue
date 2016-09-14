@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Vianetz_AsyncQueue>
+            <version>1.0.0</version>
+        </Vianetz_AsyncQueue>
+    </modules>
+
+    <global>
+        <models>
+            <vianetz_asyncqueue>
+                <class>Vianetz_AsyncQueue_Model</class>
+            </vianetz_asyncqueue>
+        </models>
+        <resources>
+            <vianetz_asyncqueue_setup>
+                <setup>
+                    <module>Vianetz_AsyncQueue</module>
+                    <class>Mage_Core_Model_Resource_Setup</class>
+                </setup>
+            </vianetz_asyncqueue_setup>
+        </resources>
+        <helpers>
+            <vianetz_asyncqueue>
+                <class>Vianetz_AsyncQueue_Helper</class>
+            </vianetz_asyncqueue>
+        </helpers>
+    </global>
+</config>
