@@ -28,7 +28,7 @@
         <exclude name=".DS_Store"/>
     </fileset>
 
-    <property name="src.dir" value="${asyncqueue.build.dir}/src"/>
+    <property name="asyncqueue.src.dir" value="${asyncqueue.build.dir}/src"/>
 
     <target name="export">
         <mkdir  dir="${asyncqueue.build.dir}" />
@@ -36,7 +36,7 @@
         <gitcheckout repository="${asyncqueue.build.dir}" branchname="${asyncqueue.git.branch}" />
 
         <!-- Get version from config.xml -->
-        <php expression="preg_match('#version.*([0-9]+\.[0-9]+\.[0-9]+).*version#', file_get_contents('${src.dir}/app/code/community/Vianetz/AsyncQueue/etc/config.xml') , $m); $retval = $m[1];"
+        <php expression="preg_match('#version.*([0-9]+\.[0-9]+\.[0-9]+).*version#', file_get_contents('${asyncqueue.src.dir}/app/code/community/Vianetz/AsyncQueue/etc/config.xml') , $m); $retval = $m[1];"
              returnProperty="build.version"/>
         <echo msg="Building Module Version: ${build.version}"/>
     </target>
