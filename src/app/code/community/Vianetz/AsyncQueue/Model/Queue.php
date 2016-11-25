@@ -35,7 +35,7 @@ class Vianetz_AsyncQueue_Model_Queue extends Mage_Core_Model_Abstract
     private function getInstance($queueName)
     {
         if (isset($this->registry[$queueName]) === false) {
-            $db = @simplexml_load_file('app' . DS . 'etc' . DS . 'local.xml');
+            $db = @simplexml_load_file(Mage::getBaseDir('etc') . DS . 'local.xml');
             $db = $db->global->resources->default_setup->connection;
             $queueOptions = array(
                 Zend_Queue::NAME => $queueName,
