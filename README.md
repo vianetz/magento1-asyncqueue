@@ -3,7 +3,6 @@ Vianetz Async Queue Extension for Magento
 
 Facts
 -----
-- version: 1.0.1
 - extension key: Vianetz_AsyncQueue
 
 Description
