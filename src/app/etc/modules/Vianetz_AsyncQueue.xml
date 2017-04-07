@@ -6,7 +6,6 @@
             <active>true</active>
             <depends>
                 <Mage_Core />
-                <Vianetz_Core />
             </depends>
         </Vianetz_AsyncQueue>
     </modules>

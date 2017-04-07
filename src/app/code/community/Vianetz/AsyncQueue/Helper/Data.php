@@ -15,9 +15,8 @@
  * @package     Vianetz_AsyncQueue
  * @author      Christoph Massmann, <C.Massmann@vianetz.com>
  * @link        http://www.vianetz.com
- * @copyright   Copyright (c) 2006-16 vianetz - C. Massmann (http://www.vianetz.com)
+ * @copyright   Copyright (c) since 2006 vianetz - C. Massmann (http://www.vianetz.com)
  * @license     http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE
- * @version     %%MODULE_VERSION%%
  */
 
 class Vianetz_AsyncQueue_Helper_Data extends Mage_Core_Helper_Data
@@ -32,7 +31,13 @@ class Vianetz_AsyncQueue_Helper_Data extends Mage_Core_Helper_Data
      */
     public function log($message, $type = LOG_DEBUG)
     {
-        Mage::helper('vianetz_core/log')->log($message, $type, 'Vianetz_AsyncQueue');
+        $moduleName = Mage::app()->getRequest()->getModuleName();
+        $extensionVersion = Mage::getConfig()->getModuleConfig($moduleName)->version;
+        $message = $moduleName . ' v' . $extensionVersion . ': ' . $message;
+        $logFilename = $moduleName . '.log';
+
+        Mage::log($message, $type, $logFilename, true);
+
         return $this;
     }
 }
