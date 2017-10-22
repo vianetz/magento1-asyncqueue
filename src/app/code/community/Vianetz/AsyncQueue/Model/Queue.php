@@ -19,12 +19,17 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE
  */
 
-class Vianetz_AsyncQueue_Model_Queue extends Mage_Core_Model_Abstract
+abstract class Vianetz_AsyncQueue_Model_Queue implements Vianetz_AsyncQueue_Model_QueueInterface
 {
     /**
      * @var array
      */
     protected $registry = array();
+
+    /**
+     * @var integer
+     */
+    protected $numberOfMessagesPerBatch = 5;
 
     /**
      * Return the queue instance.
@@ -64,33 +69,57 @@ class Vianetz_AsyncQueue_Model_Queue extends Mage_Core_Model_Abstract
     public function processQueue(Vianetz_AsyncQueue_Model_QueueInterface $queue)
     {
         $queueInstance = $this->getInstance($queue->getName());
-        foreach ($queueInstance->receive() as $message) {
+        foreach ($queueInstance->receive($this->numberOfMessagesPerBatch) as $message) {
             try {
-                $queue->run($message);
-                $queueInstance->deleteMessage($message);
+                /** @var \Vianetz_AsyncQueue_Model_MessageInterface $messageInstance */
+                $messageInstance = $this->convertMessage($message);
+                Mage::helper('vianetz_asyncqueue')->log('Processing message: ' . $messageInstance->toString());
 
+                if ($messageInstance->validate() === true) {
+                    $messageInstance->execute();
+                }
             } catch (Exception $exception) {
                 Mage::helper('vianetz_asyncqueue')->log('Error running queue message for queue ' . $queue->getName() . ': ' . $exception->getMessage());
             }
+
+            $queueInstance->deleteMessage($message);
         }
 
         return $this;
     }
 
     /**
-     * @param Vianetz_AsyncQueue_Model_QueueInterface $queue
-     * @param string|array|object $message
+     * @param Vianetz_AsyncQueue_Model_MessageInterface $message
      *
      * @return Vianetz_AsyncQueue_Model_Queue
      */
-    public function sendToQueue(Vianetz_AsyncQueue_Model_QueueInterface $queue, $message)
+    public function sendToQueue(Vianetz_AsyncQueue_Model_MessageInterface $message)
     {
-        if (is_array($message) === true || is_object($message) === true) {
-            $message = serialize($message);
-        }
-
-        $this->getInstance($queue->getName())->send($message);
+        $this->getInstance($this->getName())->send($message->toString());
 
         return $this;
+    }
+
+    /**
+     * @param \Zend_Queue_Message $queueMessage
+     *
+     * @return \Vianetz_AsyncQueue_Model_MessageInterface
+     * @throws \Vianetz_AsyncQueue_Model_MissingMessageException
+     */
+    private function convertMessage(Zend_Queue_Message $queueMessage)
+    {
+        /** @var \Vianetz_AsyncQueue_Model_Message $defaultMessageInstance */
+        $defaultMessageInstance = Mage::getModel('vianetz_asyncqueue/message')->import($queueMessage);
+        $messageType = $defaultMessageInstance->getType();
+
+        if (empty($messageType) === false && class_exists($messageType) === true) {
+            /** @var \Vianetz_AsyncQueue_Model_MessageInterface $concreteMessage */
+            $concreteMessage = new $messageType();
+            if ($concreteMessage instanceof Vianetz_AsyncQueue_Model_MessageInterface) {
+                return $concreteMessage->import($queueMessage);
+            }
+        }
+
+        throw new Vianetz_AsyncQueue_Model_MissingMessageException('Did not find a valid message class implementation for ' . $messageType);
     }
 }
