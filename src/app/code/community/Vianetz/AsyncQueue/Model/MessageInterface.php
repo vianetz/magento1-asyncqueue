@@ -1,6 +1,6 @@
 <?php
 /**
- * AsyncQueue Queue Interface
+ * AsyncQueue Message Interface
  *
  * @section LICENSE
  * This file is created by vianetz <info@vianetz.com>.
@@ -18,10 +18,37 @@
  * @license     http://www.gnu.org/licenses/gpl-3.0.txt GNU GENERAL PUBLIC LICENSE
  */
 
-interface Vianetz_AsyncQueue_Model_QueueInterface
+interface Vianetz_AsyncQueue_Model_MessageInterface
 {
+    /**
+     * @param \Zend_Queue_Message $message
+     *
+     * @return \Vianetz_AsyncQueue_Model_MessageInterface
+     */
+    public function import(Zend_Queue_Message $message);
+
+    /**
+     * @return array
+     */
+    public function getParameters();
+
     /**
      * @return string
      */
-    public function getName();
+    public function getType();
+
+    /**
+     * @return string
+     */
+    public function toString();
+
+    /**
+     * @return boolean
+     */
+    public function validate();
+
+    /**
+     * @return \Vianetz_AsyncQueue_Model_MessageInterface
+     */
+    public function execute();
 }

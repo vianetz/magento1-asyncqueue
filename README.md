@@ -9,6 +9,7 @@ Description
 -----------
 This module for the Magento online shop software adds the possibility for developers to execute asynchronouse actions
 via a simple queuing mechanism. This modules is based on Zend_Queue.
+An exemplary implementation can be seen in our [Automatic Invoice extension for Magento](https://www.vianetz.com/automaticinvoice).
 
 Requirements
 ------------
@@ -21,7 +22,7 @@ Compatibility
 
 Installation Instructions
 -------------------------
-For installation notes please see also http://www.vianetz.com/en/faq/how-to-install-the-magento-extension.html.
+For installation notes please see also [our FAQ](http://www.vianetz.com/en/faq/how-to-install-the-magento-extension.html).
 
 1. Do a backup of your Magento installation for safety reasons.
 2. Disable Magento compilation feature (if activated): System > Tools > Compiler

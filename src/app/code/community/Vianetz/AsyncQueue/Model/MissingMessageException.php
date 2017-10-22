@@ -1,6 +1,6 @@
 <?php
 /**
- * AsyncQueue Queue Interface
+ * AsyncQueue Missing Message Exception
  *
  * @section LICENSE
  * This file is created by vianetz <info@vianetz.com>.
@@ -18,10 +18,7 @@
  * @license     http://www.gnu.org/licenses/gpl-3.0.txt GNU GENERAL PUBLIC LICENSE
  */
 
-interface Vianetz_AsyncQueue_Model_QueueInterface
+class Vianetz_AsyncQueue_Model_MissingMessageException extends Exception
 {
-    /**
-     * @return string
-     */
-    public function getName();
+
 }
