@@ -30,13 +30,20 @@ class Vianetz_AsyncQueue_Helper_Data extends Mage_Core_Helper_Data
      */
     public function log($message, $type = LOG_DEBUG)
     {
-        $moduleName = Mage::app()->getRequest()->getModuleName();
-        $extensionVersion = Mage::getConfig()->getModuleConfig($moduleName)->version;
-        $message = $moduleName . ' v' . $extensionVersion . ': ' . $message;
-        $logFilename = $moduleName . '.log';
+        $extensionVersion = Mage::getConfig()->getModuleConfig($this->getExtensionNamespace())->version;
+        $message = $this->getExtensionNamespace() . ' v' . $extensionVersion . ': ' . $message;
+        $logFilename = $this->getExtensionNamespace() . '.log';
 
         Mage::log($message, $type, $logFilename, true);
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getExtensionNamespace()
+    {
+        return 'Vianetz_AsyncQueue';
     }
 }
