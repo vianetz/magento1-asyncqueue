@@ -64,10 +64,10 @@ Christoph Massmann
 
 Licence
 -------
-[GNU GENERAL PUBLIC LICENSE](http://www.gnu.org/licenses/gpl-2.0.txt)
+[GNU GENERAL PUBLIC LICENSE](http://www.gnu.org/licenses/gpl-3.0.txt)
 
 Copyright
 ---------
-(c) 2008-16 vianetz
+(c) 2008-17 vianetz
 
 This Magento Extension uses Semantic Versioning - please find more information at http://semver.org.
