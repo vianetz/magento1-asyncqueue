@@ -21,9 +21,21 @@
 class Vianetz_AsyncQueue_Model_Message implements Vianetz_AsyncQueue_Model_MessageInterface
 {
     /**
+     * The lifetime of a message in minutes. After this amount of time the message will be deleted even if not processed.
+     *
+     * @var integer
+     */
+    protected $messageLifetimeInMinutes = 1440;
+
+    /**
      * @var array
      */
     protected $messageData;
+
+    /**
+     * @var \Zend_Date
+     */
+    protected $createdAt;
 
     /**
      * @param \Zend_Queue_Message $message
@@ -34,6 +46,7 @@ class Vianetz_AsyncQueue_Model_Message implements Vianetz_AsyncQueue_Model_Messa
     {
         try {
             $this->messageData = unserialize($message->body);
+            $this->createdAt = new Zend_Date($message->created, Zend_Date::TIMESTAMP);
         } catch (Exception $exception) {
             Mage::helper('vianetz_asyncqueue')->log('Unable to unserialize queue message: ' . $exception->getMessage(), LOG_ERR);
         }
@@ -78,6 +91,14 @@ class Vianetz_AsyncQueue_Model_Message implements Vianetz_AsyncQueue_Model_Messa
     }
 
     /**
+     * @return \Zend_Date
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
      * @return bool
      */
     public function validate()
@@ -91,5 +112,16 @@ class Vianetz_AsyncQueue_Model_Message implements Vianetz_AsyncQueue_Model_Messa
     public function execute()
     {
         return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isExpired()
+    {
+        $now = Zend_Date::now();
+        $diffInSeconds = $now->sub($this->getCreatedAt())->toValue();
+
+        return ($diffInSeconds >= $this->messageLifetimeInMinutes*60);
     }
 }

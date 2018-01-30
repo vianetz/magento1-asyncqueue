@@ -64,6 +64,7 @@ abstract class Vianetz_AsyncQueue_Model_Queue implements Vianetz_AsyncQueue_Mode
      * @param Vianetz_AsyncQueue_Model_QueueInterface $queue
      *
      * @return Vianetz_AsyncQueue_Model_Queue
+     * @throws \Zend_Queue_Exception
      */
     public function processQueue(Vianetz_AsyncQueue_Model_QueueInterface $queue)
     {
@@ -76,9 +77,8 @@ abstract class Vianetz_AsyncQueue_Model_Queue implements Vianetz_AsyncQueue_Mode
 
                 if ($messageInstance->validate() === true) {
                     $messageInstance->execute();
+                    $queueInstance->deleteMessage($message);
                 }
-
-                $queueInstance->deleteMessage($message);
             } catch (Exception $exception) {
                 Mage::helper('vianetz_asyncqueue')->log('Error running queue message for queue ' . $queue->getName() . ': ' . $exception->getMessage());
             }
@@ -91,10 +91,37 @@ abstract class Vianetz_AsyncQueue_Model_Queue implements Vianetz_AsyncQueue_Mode
      * @param Vianetz_AsyncQueue_Model_MessageInterface $message
      *
      * @return Vianetz_AsyncQueue_Model_Queue
+     * @throws \Zend_Queue_Exception
      */
     public function sendToQueue(Vianetz_AsyncQueue_Model_MessageInterface $message)
     {
         $this->getInstance($this->getName())->send($message->toString());
+
+        return $this;
+    }
+
+    /**
+     * @param \Vianetz_AsyncQueue_Model_QueueInterface $queue
+     *
+     * @return $this
+     * @throws \Zend_Queue_Exception
+     */
+    public function cleanupQueue(Vianetz_AsyncQueue_Model_QueueInterface $queue)
+    {
+        $queueInstance = $this->getInstance($queue->getName());
+        foreach ($queueInstance->receive($this->numberOfMessagesPerBatch) as $message) {
+            try {
+                /** @var \Vianetz_AsyncQueue_Model_MessageInterface $messageInstance */
+                $messageInstance = $this->convertMessage($message);
+
+                if ($messageInstance->isExpired() === true) {
+                    Mage::helper('vianetz_asyncqueue')->log('Cleaning up message: ' . $messageInstance->toString());
+                    $queueInstance->deleteMessage($message);
+                }
+            } catch (Exception $exception) {
+                Mage::helper('vianetz_asyncqueue')->log('Error running cleanup queue message for queue ' . $queue->getName() . ': ' . $exception->getMessage());
+            }
+        }
 
         return $this;
     }
