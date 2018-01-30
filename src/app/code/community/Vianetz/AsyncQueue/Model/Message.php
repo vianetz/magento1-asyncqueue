@@ -21,6 +21,13 @@
 class Vianetz_AsyncQueue_Model_Message implements Vianetz_AsyncQueue_Model_MessageInterface
 {
     /**
+     * The lifetime of a message in minutes. After this amount of time the message will be deleted even if not processed.
+     *
+     * @var integer
+     */
+    protected $messageLifetimeInMinutes = 1440;
+
+    /**
      * @var array
      */
     protected $messageData;
@@ -105,5 +112,16 @@ class Vianetz_AsyncQueue_Model_Message implements Vianetz_AsyncQueue_Model_Messa
     public function execute()
     {
         return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isExpired()
+    {
+        $now = Zend_Date::now();
+        $diffInSeconds = $now->sub($this->getCreatedAt())->toValue();
+
+        return ($diffInSeconds >= $this->messageLifetimeInMinutes*60);
     }
 }

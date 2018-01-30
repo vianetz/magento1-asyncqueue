@@ -56,4 +56,9 @@ interface Vianetz_AsyncQueue_Model_MessageInterface
      * @return \Zend_Date
      */
     public function getCreatedAt();
+
+    /**
+     * @return boolean
+     */
+    public function isExpired();
 }

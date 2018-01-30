@@ -101,6 +101,32 @@ abstract class Vianetz_AsyncQueue_Model_Queue implements Vianetz_AsyncQueue_Mode
     }
 
     /**
+     * @param \Vianetz_AsyncQueue_Model_QueueInterface $queue
+     *
+     * @return $this
+     * @throws \Zend_Queue_Exception
+     */
+    public function cleanupQueue(Vianetz_AsyncQueue_Model_QueueInterface $queue)
+    {
+        $queueInstance = $this->getInstance($queue->getName());
+        foreach ($queueInstance->receive($this->numberOfMessagesPerBatch) as $message) {
+            try {
+                /** @var \Vianetz_AsyncQueue_Model_MessageInterface $messageInstance */
+                $messageInstance = $this->convertMessage($message);
+
+                if ($messageInstance->isExpired() === true) {
+                    Mage::helper('vianetz_asyncqueue')->log('Cleaning up message: ' . $messageInstance->toString());
+                    $queueInstance->deleteMessage($message);
+                }
+            } catch (Exception $exception) {
+                Mage::helper('vianetz_asyncqueue')->log('Error running cleanup queue message for queue ' . $queue->getName() . ': ' . $exception->getMessage());
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * @param \Zend_Queue_Message $queueMessage
      *
      * @return \Vianetz_AsyncQueue_Model_MessageInterface
