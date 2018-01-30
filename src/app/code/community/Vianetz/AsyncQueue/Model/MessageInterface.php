@@ -51,4 +51,9 @@ interface Vianetz_AsyncQueue_Model_MessageInterface
      * @return \Vianetz_AsyncQueue_Model_MessageInterface
      */
     public function execute();
+
+    /**
+     * @return \Zend_Date
+     */
+    public function getCreatedAt();
 }

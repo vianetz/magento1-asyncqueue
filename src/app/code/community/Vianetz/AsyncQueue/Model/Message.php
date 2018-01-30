@@ -26,6 +26,11 @@ class Vianetz_AsyncQueue_Model_Message implements Vianetz_AsyncQueue_Model_Messa
     protected $messageData;
 
     /**
+     * @var \Zend_Date
+     */
+    protected $createdAt;
+
+    /**
      * @param \Zend_Queue_Message $message
      *
      * @return $this
@@ -34,6 +39,7 @@ class Vianetz_AsyncQueue_Model_Message implements Vianetz_AsyncQueue_Model_Messa
     {
         try {
             $this->messageData = unserialize($message->body);
+            $this->createdAt = new Zend_Date($message->created, Zend_Date::TIMESTAMP);
         } catch (Exception $exception) {
             Mage::helper('vianetz_asyncqueue')->log('Unable to unserialize queue message: ' . $exception->getMessage(), LOG_ERR);
         }
@@ -75,6 +81,14 @@ class Vianetz_AsyncQueue_Model_Message implements Vianetz_AsyncQueue_Model_Messa
         }
 
         return $messageData;
+    }
+
+    /**
+     * @return \Zend_Date
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
     }
 
     /**

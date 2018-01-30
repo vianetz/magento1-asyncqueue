@@ -64,6 +64,7 @@ abstract class Vianetz_AsyncQueue_Model_Queue implements Vianetz_AsyncQueue_Mode
      * @param Vianetz_AsyncQueue_Model_QueueInterface $queue
      *
      * @return Vianetz_AsyncQueue_Model_Queue
+     * @throws \Zend_Queue_Exception
      */
     public function processQueue(Vianetz_AsyncQueue_Model_QueueInterface $queue)
     {
@@ -76,9 +77,8 @@ abstract class Vianetz_AsyncQueue_Model_Queue implements Vianetz_AsyncQueue_Mode
 
                 if ($messageInstance->validate() === true) {
                     $messageInstance->execute();
+                    $queueInstance->deleteMessage($message);
                 }
-
-                $queueInstance->deleteMessage($message);
             } catch (Exception $exception) {
                 Mage::helper('vianetz_asyncqueue')->log('Error running queue message for queue ' . $queue->getName() . ': ' . $exception->getMessage());
             }
@@ -91,6 +91,7 @@ abstract class Vianetz_AsyncQueue_Model_Queue implements Vianetz_AsyncQueue_Mode
      * @param Vianetz_AsyncQueue_Model_MessageInterface $message
      *
      * @return Vianetz_AsyncQueue_Model_Queue
+     * @throws \Zend_Queue_Exception
      */
     public function sendToQueue(Vianetz_AsyncQueue_Model_MessageInterface $message)
     {
