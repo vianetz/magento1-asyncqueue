@@ -38,6 +38,18 @@ interface Vianetz_AsyncQueue_Model_MessageInterface
     public function getType();
 
     /**
+     * @param array $customParameters
+     *
+     * @return \Vianetz_AsyncQueue_Model_MessageInterface
+     */
+    public function setCustomParameters(array $customParameters);
+
+    /**
+     * @return array
+     */
+    public function getCustomParameters();
+
+    /**
      * @return string
      */
     public function toString();

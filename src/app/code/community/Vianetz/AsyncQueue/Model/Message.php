@@ -75,6 +75,29 @@ class Vianetz_AsyncQueue_Model_Message implements Vianetz_AsyncQueue_Model_Messa
     }
 
     /**
+     * @param array $customParameters
+     *
+     * @return $this
+     */
+    public function setCustomParameters(array $customParameters)
+    {
+        $this->messageData['customParameters'] = $customParameters;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getCustomParameters()
+    {
+        if (isset($this->messageData['customParameters']) === false) {
+            return array();
+        }
+
+        return $this->messageData['customParameters'];
+    }
+
+    /**
      * @return string
      */
     public function toString()
