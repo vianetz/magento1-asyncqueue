@@ -13,8 +13,8 @@
  * @category    Vianetz
  * @package     Vianetz\AsyncQueue
  * @author      Christoph Massmann, <C.Massmann@vianetz.com>
- * @link        http://www.vianetz.com
- * @copyright   Copyright (c) since 2006 vianetz - Dipl.-Ing. C. Massmann (http://www.vianetz.com)
+ * @link        https://www.vianetz.com
+ * @copyright   Copyright (c) since 2006 vianetz - Dipl.-Ing. C. Massmann (https://www.vianetz.com)
  * @license     http://www.gnu.org/licenses/gpl-3.0.txt GNU GENERAL PUBLIC LICENSE
  */
 
