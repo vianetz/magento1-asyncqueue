@@ -3,7 +3,7 @@ Vianetz Async Queue Extension for Magento
 
 Facts
 -----
-- extension key: Vianetz_AsyncQueue
+- Extension key: `Vianetz_AsyncQueue`
 
 Description
 -----------
@@ -13,12 +13,12 @@ An exemplary implementation can be seen in our [Automatic Invoice extension for 
 
 Requirements
 ------------
-- PHP >= 5.2.0
-- Mage_Core
+- PHP >= 5.6.0
+- `Mage_Core`
 
 Compatibility
 -------------
-- Magento >= 1.7
+- Magento >= 1.9
 
 Installation Instructions
 -------------------------
@@ -68,6 +68,6 @@ Licence
 
 Copyright
 ---------
-(c) 2008-18 vianetz
+(c) since 2008 vianetz
 
 This Magento Extension uses Semantic Versioning - please find more information at http://semver.org.
